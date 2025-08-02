@@ -1,8 +1,8 @@
-// src/components/DeviceList.jsx
 import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import { DEVICE_REGISTRY_ADDRESS, DEVICE_REGISTRY_ABI } from "../constants";
 import { toast } from "react-toastify";
+import "./DeviceList.css";
 
 export default function DeviceList({ provider, account, refreshFlag, onDevicesUpdated }) {
   const [devices, setDevices] = useState([]);
@@ -38,14 +38,12 @@ export default function DeviceList({ provider, account, refreshFlag, onDevicesUp
           };
         });
 
-        // Filter devices owned by the current account (case insensitive)
         const filtered = account
           ? pastDevices.filter(d => d.owner === account.toLowerCase())
           : [];
 
         setDevices(filtered);
 
-        // Lift devices state up to parent if callback provided
         if (typeof onDevicesUpdated === "function") {
           onDevicesUpdated(filtered);
         }
@@ -63,35 +61,39 @@ export default function DeviceList({ provider, account, refreshFlag, onDevicesUp
   }, [provider, refreshFlag, account, onDevicesUpdated]);
 
   return (
-    <div>
-      <h2>Your Registered Devices</h2>
-      {loading && <p>Loading devices...</p>}
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      {!loading && devices.length === 0 && <p>You have no registered devices.</p>}
+    <div className="device-list-container">
+      <h2 className="device-list-title">Your Registered Devices</h2>
+      {loading && <p className="info-text">Loading devices...</p>}
+      {error && <p className="error-text">{error}</p>}
+      {!loading && devices.length === 0 && (
+        <p className="info-text">You have no registered devices.</p>
+      )}
 
       {devices.length > 0 && (
-        <table border="1" cellPadding="8" style={{ borderCollapse: "collapse" }}>
-          <thead>
-            <tr>
-              <th>Device ID</th>
-              <th>Name</th>
-              <th>Location</th>
-              <th>Metadata URI</th>
-              <th>Registered At</th>
-            </tr>
-          </thead>
-          <tbody>
-            {devices.map((device) => (
-              <tr key={device.deviceId}>
-                <td>{device.deviceId}</td>
-                <td>{device.name}</td>
-                <td>{device.location}</td>
-                <td>{device.metadataURI || "-"}</td>
-                <td>{device.registeredAt}</td>
+        <div className="table-wrapper">
+          <table className="device-table">
+            <thead>
+              <tr>
+                <th>Device ID</th>
+                <th>Name</th>
+                <th>Location</th>
+                <th>Metadata URI</th>
+                <th>Registered At</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {devices.map((device) => (
+                <tr key={device.deviceId}>
+                  <td>{device.deviceId}</td>
+                  <td>{device.name}</td>
+                  <td>{device.location}</td>
+                  <td>{device.metadataURI || "-"}</td>
+                  <td>{device.registeredAt}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );

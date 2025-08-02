@@ -1,8 +1,8 @@
-// src/components/ListDeviceForSale.jsx
 import React, { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import { toast } from "react-toastify";
 import { MARKETPLACE_ADDRESS, MARKETPLACE_ABI, DEVICE_REGISTRY_ADDRESS, DEVICE_REGISTRY_ABI } from "../constants";
+import "./ListDeviceForSale.css";
 
 export default function ListDeviceForSale({ provider, account }) {
   const [devices, setDevices] = useState([]);
@@ -19,7 +19,7 @@ export default function ListDeviceForSale({ provider, account }) {
 
     async function fetchUserDevices() {
       try {
-        const filter = contract.filters.DeviceRegistered(null,  account);
+        const filter = contract.filters.DeviceRegistered(null, account);
         const events = await contract.queryFilter(filter, 0, "latest");
 
         const userDevices = events.map(event => {
@@ -66,16 +66,17 @@ export default function ListDeviceForSale({ provider, account }) {
   };
 
   return (
-    <div>
-      <h3>List Device Data for Sale</h3>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+    <div className="list-device-container">
+      <h3 className="list-device-title">List Device Data for Sale</h3>
+      {error && <p className="error-text">{error}</p>}
 
-      <label>
-        Select Device: <br />
+      <label className="input-label">
+        Select Device:
         <select
           value={selectedDeviceId}
           onChange={(e) => setSelectedDeviceId(e.target.value)}
           disabled={loading}
+          className="select-input"
         >
           {devices.map((device) => (
             <option key={device.deviceId} value={device.deviceId}>
@@ -84,10 +85,9 @@ export default function ListDeviceForSale({ provider, account }) {
           ))}
         </select>
       </label>
-      <br /><br />
 
-      <label>
-        Price (ETH): <br />
+      <label className="input-label">
+        Price (ETH):
         <input
           type="number"
           value={priceEth}
@@ -96,23 +96,27 @@ export default function ListDeviceForSale({ provider, account }) {
           placeholder="e.g., 0.01"
           min="0"
           step="0.0001"
+          className="text-input"
         />
       </label>
-      <br /><br />
 
-      <label>
-        Metadata URI (optional): <br />
+      <label className="input-label">
+        Metadata URI (optional):
         <input
           type="text"
           value={metadataURI}
           onChange={(e) => setMetadataURI(e.target.value)}
           disabled={loading}
           placeholder="https://..."
+          className="text-input"
         />
       </label>
-      <br /><br />
 
-      <button onClick={handleList} disabled={loading}>
+      <button
+        onClick={handleList}
+        disabled={loading}
+        className="list-button"
+      >
         {loading ? "Listing..." : "List Device Data"}
       </button>
     </div>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import { MARKETPLACE_ADDRESS, MARKETPLACE_ABI } from "../constants";
+import "./MarketplaceListings.css";
 
 export default function MarketplaceListings({ provider, account }) {
   const [listings, setListings] = useState([]);
@@ -25,7 +26,7 @@ export default function MarketplaceListings({ provider, account }) {
           .map(e => ({
             dataId: e.args.dataId.toString(),
             publisher: e.args.publisher,
-            price: ethers.utils.formatEther(e.args.price), // convert wei to ether
+            price: ethers.utils.formatEther(e.args.price),
           }));
 
         setListings(activeListings);
@@ -52,7 +53,7 @@ export default function MarketplaceListings({ provider, account }) {
       await tx.wait();
 
       alert(`Successfully purchased data ${dataId}!`);
-      
+
       // Reload listings after purchase
       const listedEvents = await contract.queryFilter(contract.filters.DataListed(), 0, "latest");
       const purchasedEvents = await contract.queryFilter(contract.filters.DataPurchased(), 0, "latest");
@@ -74,22 +75,24 @@ export default function MarketplaceListings({ provider, account }) {
     }
   }
 
-  if (loading) return <p>Loading listings...</p>;
-  if (listings.length === 0) return <p>No active listings.</p>;
+  if (loading) return <p className="loading-text">Loading listings...</p>;
+  if (listings.length === 0) return <p className="no-listings-text">No active listings.</p>;
 
   return (
-    <div>
-      <h2>Marketplace Listings</h2>
-      <ul>
+    <div className="marketplace-container">
+      <h2 className="marketplace-title">Marketplace Listings</h2>
+      <ul className="marketplace-list">
         {listings.map(listing => (
-          <li key={listing.dataId} style={{ marginBottom: "1rem" }}>
-            <strong>Data ID:</strong> {listing.dataId} <br />
-            <strong>Price:</strong> {listing.price} ETH <br />
-            <strong>Publisher:</strong> {listing.publisher} <br />
-            <button 
-              onClick={() => handleBuy(listing.dataId, listing.price)} 
+          <li key={listing.dataId} className="marketplace-item">
+            <div>
+              <strong>Data ID:</strong> {listing.dataId} <br />
+              <strong>Price:</strong> {listing.price} ETH <br />
+              <strong>Publisher:</strong> {listing.publisher} <br />
+            </div>
+            <button
+              className="buy-button"
+              onClick={() => handleBuy(listing.dataId, listing.price)}
               disabled={buyingDataId === listing.dataId}
-              style={{ marginTop: "0.5rem", padding: "0.3rem 0.8rem" }}
             >
               {buyingDataId === listing.dataId ? "Buying..." : "Buy"}
             </button>

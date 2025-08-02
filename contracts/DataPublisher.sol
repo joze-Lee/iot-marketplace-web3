@@ -28,6 +28,7 @@ contract DataPublisher {
         require(dataEntries[dataId].publisher == msg.sender, "Not authorized");
         _;
     }
+    
 
     function publishData(
         string memory dataHash,

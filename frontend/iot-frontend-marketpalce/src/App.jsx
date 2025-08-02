@@ -12,6 +12,7 @@ import AllDataList from "./components/AllDataList";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import "./App.css";
 
 function App() {
   const [account, setAccount] = useState(null);
@@ -20,8 +21,6 @@ function App() {
   const [devices, setDevices] = useState([]);
 
   useEffect(() => {
-   
-   
     if (account && window.ethereum) {
       window.ethereum.request({ method: 'eth_accounts' }).then(accounts => {
         if (accounts.length > 0 && accounts[0] !== account) {
@@ -44,39 +43,62 @@ function App() {
   }
 
   return (
-    <div style={{ padding: "1rem" }}>
-      <h1>IoT Marketplace Frontend</h1>
+    <div className="app-container">
+      <header className="app-header">
+        <h1 className="app-title">IoT Data Marketplace</h1>
+      </header>
 
-      {/* Pass account prop here! */}
-      <WalletConnect account={account} onConnected={handleWalletConnected} />
+      <main className="main-content">
+        <WalletConnect account={account} onConnected={handleWalletConnected} />
 
-      {provider && account && (
-        <>
-          <DeviceList
-            provider={provider}
-            account={account}
-            refreshFlag={refreshFlag}
-            onDevicesUpdated={setDevices}
-          />
-          <RegisterDevice
-            provider={provider}
-            onRegistered={handleDeviceRegistered}
-          />
-          <DataPublisher
-            provider={provider}
-            account={account}
-            devices={devices}
-          />
-          <ListDeviceForSale
-            provider={provider}
-            account={account}
-            devices={devices}
-          />
-          <MarketplaceListings provider={provider} account={account} />
-          <AllDataList provider={provider} />
-          <DataConsumption provider={provider} account={account} />
-        </>
-      )}
+        {provider && account && (
+          <div className="cards-container">
+            <div className="card glass-card">
+              <DeviceList
+                provider={provider}
+                account={account}
+                refreshFlag={refreshFlag}
+                onDevicesUpdated={setDevices}
+              />
+            </div>
+
+            <div className="card glass-card">
+              <RegisterDevice
+                provider={provider}
+                onRegistered={handleDeviceRegistered}
+              />
+            </div>
+
+            <div className="card glass-card">
+              <DataPublisher
+                provider={provider}
+                account={account}
+                devices={devices}
+              />
+            </div>
+
+            <div className="card glass-card">
+              <ListDeviceForSale
+                provider={provider}
+                account={account}
+                devices={devices}
+              />
+            </div>
+
+            <div className="card glass-card">
+              <MarketplaceListings provider={provider} account={account} />
+            </div>
+
+            <div className="card glass-card">
+              <AllDataList provider={provider} />
+            </div>
+
+            <div className="card glass-card">
+              <DataConsumption provider={provider} account={account} />
+            </div>
+          </div>
+        )}
+      </main>
 
       <ToastContainer position="top-right" />
     </div>

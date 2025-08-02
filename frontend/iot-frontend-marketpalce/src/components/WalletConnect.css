@@ -1,0 +1,43 @@
+.wallet-container {
+    margin: 1rem auto;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    max-width: 400px;
+    text-align: center;
+    backdrop-filter: blur(8px);
+  }
+  
+  .wallet-address {
+    font-weight: bold;
+    color: #00ffe0;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+  }
+  
+  .wallet-button {
+    padding: 0.6rem 1.2rem;
+    border: none;
+    border-radius: 0.75rem;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background 0.3s, transform 0.2s;
+  }
+  
+  .wallet-button.connect {
+    /* background: linear-gradient(135deg, #4f46e5, #06b6d4); */
+    color: black;
+  }
+  
+  .wallet-button.disconnect {
+    background: linear-gradient(135deg, #e11d48, #be123c);
+    color: white;
+  }
+  
+  .wallet-button:hover {
+    transform: scale(1.05);
+    opacity: 0.95;
+  }
+  

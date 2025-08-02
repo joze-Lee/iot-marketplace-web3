@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import "./WalletConnect.css";
 
 export default function WalletConnect({ account, onConnected }) {
 
@@ -39,15 +40,14 @@ export default function WalletConnect({ account, onConnected }) {
   }, [onConnected]);
 
   return (
-    <div>
+    <div className="wallet-container">
       {account ? (
-        <div>
-          <p>Connected account: {account}</p>
-          <button onClick={disconnectWallet}>Disconnect Wallet</button>
+        <div className="wallet-connected">
+          <p className="wallet-address">Connected: {account}</p>
+          <button className="wallet-button disconnect" onClick={disconnectWallet}>Disconnect Wallet</button>
         </div>
       ) : (
-        
-        <button onClick={connectWallet}>Connect Wallet</button>
+        <button className="wallet-button connect" onClick={connectWallet}>Connect Wallet</button>
       )}
     </div>
   );

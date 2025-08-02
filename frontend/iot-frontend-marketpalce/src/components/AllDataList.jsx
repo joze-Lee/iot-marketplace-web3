@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import { DATA_PUBLISHER_ADDRESS, DATA_PUBLISHER_ABI } from "../constants";
+import "./AllDataList.css";
 
 export default function AllDataList({ provider }) {
   const [dataEntries, setDataEntries] = useState([]);
@@ -14,10 +15,9 @@ export default function AllDataList({ provider }) {
       try {
         const contract = new ethers.Contract(DATA_PUBLISHER_ADDRESS, DATA_PUBLISHER_ABI, provider);
 
-        // Assuming your DataPublisher contract has a method to get total data count
-        const totalCount = await contract.getDataCount(); // You might need to add this method if missing
-        // const totalCount = 0
-        
+        // TODO: Replace 0 with actual total count
+        const totalCount = 0;
+
         const entries = [];
         for (let i = 0; i < totalCount; i++) {
           const data = await contract.getDataEntry(i);
@@ -41,24 +41,28 @@ export default function AllDataList({ provider }) {
     fetchAllData();
   }, [provider]);
 
-  if (loading) return <p>Loading all data entries...</p>;
-  if (dataEntries.length === 0) return <p>No data entries found.</p>;
-
   return (
-    <div>
-      <h2>All Data Entries</h2>
-      <ul>
-        {dataEntries.map(entry => (
-          <li key={entry.id}>
-            <strong>ID:</strong> {entry.id} <br />
-            <strong>Description:</strong> {entry.description} <br />
-            <strong>Publisher:</strong> {entry.publisher} <br />
-            <strong>Timestamp:</strong> {entry.timestamp} <br />
-            <strong>Available:</strong> {entry.isAvailable ? "Yes" : "No"} <br />
-            <strong>Data Hash:</strong> {entry.dataHash}
-          </li>
-        ))}
-      </ul>
+    <div className="all-data-container">
+      <h2 className="section-title">All Data Entries</h2>
+
+      {loading ? (
+        <p className="info-text">Loading all data entries...</p>
+      ) : dataEntries.length === 0 ? (
+        <p className="info-text">No data entries found.</p>
+      ) : (
+        <ul className="data-list">
+          {dataEntries.map(entry => (
+            <li key={entry.id} className="data-item">
+              <p><strong>ID:</strong> {entry.id}</p>
+              <p><strong>Description:</strong> {entry.description}</p>
+              <p><strong>Publisher:</strong> {entry.publisher}</p>
+              <p><strong>Timestamp:</strong> {entry.timestamp}</p>
+              <p><strong>Available:</strong> {entry.isAvailable ? "Yes" : "No"}</p>
+              <p><strong>Data Hash:</strong> {entry.dataHash}</p>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }

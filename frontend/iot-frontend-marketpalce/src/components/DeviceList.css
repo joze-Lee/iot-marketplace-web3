@@ -1,0 +1,65 @@
+.device-list-container {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 1.25rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(12px);
+    color: white;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  .device-list-title {
+    font-size: 2rem;
+    color: #00ffe0;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+  
+  .info-text {
+    text-align: center;
+    color: #a0f0ff;
+    font-weight: 500;
+  }
+  
+  .error-text {
+    text-align: center;
+    color: #ff6b6b;
+    font-weight: 600;
+  }
+  
+  .table-wrapper {
+    overflow-x: auto;
+    margin-top: 1.5rem;
+  }
+  
+  .device-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 1rem;
+    overflow: hidden;
+  }
+  
+  .device-table th,
+  .device-table td {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .device-table th {
+    background: rgba(0, 255, 224, 0.15);
+    color: #00ffe0;
+    font-weight: 700;
+  }
+  
+  .device-table tr:hover {
+    background: rgba(255, 255, 255, 0.08);
+    transition: background 0.3s ease;
+  }
+  

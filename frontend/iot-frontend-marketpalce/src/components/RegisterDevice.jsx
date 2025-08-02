@@ -1,8 +1,8 @@
-// src/components/RegisterDevice.jsx
 import React, { useState } from "react";
 import { ethers } from "ethers";
 import { DEVICE_REGISTRY_ADDRESS, DEVICE_REGISTRY_ABI } from "../constants";
 import { toast } from "react-toastify";
+import "./RegisterDevice.css";
 
 export default function RegisterDevice({ provider, onRegistered }) {
   const [form, setForm] = useState({
@@ -18,15 +18,13 @@ export default function RegisterDevice({ provider, onRegistered }) {
   };
 
   const register = async () => {
-    console.log("Register button clicked");
-    
     let { deviceId, deviceName: name, location, metadataURI } = form;
-
     deviceId = deviceId.trim();
     name = name.trim();
     location = location.trim();
     metadataURI = metadataURI.trim();
-    if (!deviceId || ! name || !location) {
+
+    if (!deviceId || !name || !location) {
       return toast.error("Device ID, Name, and Location are required");
     }
 
@@ -39,7 +37,6 @@ export default function RegisterDevice({ provider, onRegistered }) {
       await tx.wait();
 
       toast.success("Device registered successfully!");
-
       setForm({ deviceId: "", deviceName: "", location: "", metadataURI: "" });
       onRegistered();
     } catch (err) {
@@ -51,41 +48,49 @@ export default function RegisterDevice({ provider, onRegistered }) {
   };
 
   return (
-    <div>
-      <h3>Register New Device</h3>
+    <div className="register-container">
+      <h3 className="register-title">Register New Device</h3>
       <input
+        className="register-input"
         type="text"
         name="deviceId"
         placeholder="Device ID"
         value={form.deviceId}
         onChange={handleChange}
         disabled={loading}
-      /><br />
+      />
       <input
+        className="register-input"
         type="text"
         name="deviceName"
         placeholder="Device Name"
         value={form.deviceName}
         onChange={handleChange}
         disabled={loading}
-      /><br />
+      />
       <input
+        className="register-input"
         type="text"
         name="location"
         placeholder="Location"
         value={form.location}
         onChange={handleChange}
         disabled={loading}
-      /><br />
+      />
       <input
+        className="register-input"
         type="text"
         name="metadataURI"
         placeholder="Metadata URI (optional)"
         value={form.metadataURI}
         onChange={handleChange}
         disabled={loading}
-      /><br />
-      <button onClick={register} disabled={loading}>
+      />
+      <button
+        className="register-button"
+        onClick={register}
+        disabled={loading}
+      >
         {loading ? "Registering..." : "Register Device"}
       </button>
     </div>

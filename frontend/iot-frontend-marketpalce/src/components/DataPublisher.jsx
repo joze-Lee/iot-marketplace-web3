@@ -1,8 +1,8 @@
-// src/components/DataPublisher.jsx
 import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import { DATA_PUBLISHER_ADDRESS, DATA_PUBLISHER_ABI } from "../constants";
 import { toast } from "react-toastify";
+import "./DataPublisher.css";
 
 export default function DataPublisher({ provider, account, devices }) {
   const [selectedDeviceId, setSelectedDeviceId] = useState("");
@@ -13,9 +13,8 @@ export default function DataPublisher({ provider, account, devices }) {
   useEffect(() => {
     if (!provider || !account) return;
 
-    // Fetch user's published data by scanning dataIds, placeholder logic for now
-    // TODO: Implement contract calls to fetch user's data
-
+    // Placeholder for data fetching logic
+    // TODO: Fetch and set published data
   }, [provider, account]);
 
   const publishData = async () => {
@@ -31,7 +30,7 @@ export default function DataPublisher({ provider, account, devices }) {
       const signer = await provider.getSigner();
       const contract = new ethers.Contract(DATA_PUBLISHER_ADDRESS, DATA_PUBLISHER_ABI, signer);
 
-      // TODO: Replace with actual contract call to publish data
+      // TODO: Replace with actual contract call
       // const tx = await contract.publishData(selectedDeviceId, description);
       // await tx.wait();
 
@@ -46,12 +45,13 @@ export default function DataPublisher({ provider, account, devices }) {
   };
 
   return (
-    <div>
-      <h3>Publish Data</h3>
+    <div className="data-publisher-container">
+      <h3 className="data-publisher-title">Publish IoT Data</h3>
 
-      <label>
+      <label className="input-label">
         Select Device:
         <select
+          className="select-input"
           value={selectedDeviceId}
           onChange={(e) => setSelectedDeviceId(e.target.value)}
           disabled={loading}
@@ -65,22 +65,27 @@ export default function DataPublisher({ provider, account, devices }) {
         </select>
       </label>
 
-      <br />
-      <textarea
-        placeholder="Data description"
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-        disabled={loading}
-        rows={4}
-        cols={40}
-      />
+      <label className="input-label">
+        Data Description:
+        <textarea
+          className="text-area"
+          placeholder="Enter data description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          disabled={loading}
+          rows={4}
+        />
+      </label>
 
-      <br />
-      <button onClick={publishData} disabled={loading}>
+      <button
+        className="publish-button"
+        onClick={publishData}
+        disabled={loading}
+      >
         {loading ? "Publishing..." : "Publish Data"}
       </button>
 
-      {/* TODO: List of published data below */}
+      {/* TODO: Add list of published data below */}
     </div>
   );
 }
