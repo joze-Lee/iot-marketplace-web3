@@ -1,5 +1,7 @@
 {
     "watch": ["contracts", "scripts"],
     "ext": "sol,js,json",
-    "exec": "npx hardhat compile && npx hardhat run scripts/deploy.js --network localhost"
+     "exec": "npx hardhat compile && npx hardhat run scripts/deploy.js --network sepolia"
+
   }
+  
