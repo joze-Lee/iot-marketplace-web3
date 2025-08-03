@@ -27,14 +27,16 @@ export default function DeviceList({ provider, account, refreshFlag, onDevicesUp
         const events = await contract.queryFilter(filter, 0, "latest");
 
         const pastDevices = events.map((event) => {
-          const [deviceId, name, location, owner, metadataURI, registeredAt] = event.args;
+          console.log("Event args:", event.args);
+          const [deviceId, name, location, owner, metadataURI] = event.args;
           return {
             deviceId: deviceId.toString(),
             name,
             location,
             owner: owner.toLowerCase(),
             metadataURI,
-            registeredAt: new Date(registeredAt.toNumber() * 1000).toLocaleString(),
+            // registeredAt: new Date(registeredAt.toNumber() * 1000).toLocaleString(),
+            registeredAt:new Date().toLocaleString()
           };
         });
 

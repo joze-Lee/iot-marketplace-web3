@@ -27,6 +27,10 @@ contract Marketplace {
     mapping(uint256 => address) public buyers;    // dataId => buyer
     mapping(address => uint256) public earnings;  // publisher => balance
 
+    // ✅ New state variables
+    Listing[] public allListings;
+    mapping(address => uint256[]) public publisherListings; // publisher => dataIds
+
     event DataListed(uint256 dataId, address publisher, uint256 price);
     event DataPurchased(uint256 dataId, address buyer);
 
@@ -34,7 +38,6 @@ contract Marketplace {
         owner = msg.sender;
         dataPublisher = IDataPublisher(dataPublisherAddress);
     }
-
     function listData(uint256 dataId, uint256 price) external {
         (
             ,
@@ -54,6 +57,10 @@ contract Marketplace {
             price: price,
             isSold: false
         });
+
+        // ✅ Add to arrays/mappings
+        allListings.push(listings[dataId]);
+        publisherListings[msg.sender].push(dataId);
 
         emit DataListed(dataId, msg.sender, price);
     }
@@ -88,5 +95,27 @@ contract Marketplace {
         require(amount > 0, "Nothing to withdraw");
         earnings[msg.sender] = 0;
         payable(msg.sender).transfer(amount);
+    }
+
+    // ✅ New helper functions for frontend (avoid eth_getLogs)
+    
+    function getAllListings() external view returns (Listing[] memory) {
+        return allListings;
+    }
+
+    function getListingsByPublisher(address _publisher) external view returns (uint256[] memory) {
+        return publisherListings[_publisher];
+    }
+
+    function getListing(uint256 dataId) external view returns (Listing memory) {
+        return listings[dataId];
+    }
+
+    function getBuyer(uint256 dataId) external view returns (address) {
+        return buyers[dataId];
+    }
+
+    function getEarnings(address _publisher) external view returns (uint256) {
+        return earnings[_publisher];
     }
 }

@@ -5,7 +5,8 @@ contract DataPublisher {
     struct DataEntry {
         uint256 id;
         address publisher;
-        string dataHash; // IPFS hash or external reference
+        string dataHash;
+        string deviceId;
         string description;
         uint256 timestamp;
         bool isAvailable;
@@ -28,14 +29,15 @@ contract DataPublisher {
         require(dataEntries[dataId].publisher == msg.sender, "Not authorized");
         _;
     }
-    
 
     function publishData(
         string memory dataHash,
-        string memory description
+        string memory description,
+        string memory deviceId
     ) external {
         require(bytes(dataHash).length > 0, "Data hash cannot be empty");
         require(bytes(description).length > 0, "Description cannot be empty");
+        require(bytes(deviceId).length > 0, "Device ID required");
 
         uint256 currentId = nextDataId;
         dataEntries[currentId] = DataEntry({
@@ -43,6 +45,7 @@ contract DataPublisher {
             publisher: msg.sender,
             dataHash: dataHash,
             description: description,
+            deviceId: deviceId,
             timestamp: block.timestamp,
             isAvailable: true
         });
@@ -57,6 +60,12 @@ contract DataPublisher {
     ) external view returns (DataEntry memory) {
         require(dataEntries[dataId].isAvailable, "Data not available");
         return dataEntries[dataId];
+    }
+    function getDeviceIdByDataId(
+        uint256 dataId
+    ) external view returns (string memory) {
+        require(dataEntries[dataId].isAvailable, "Data not available");
+        return dataEntries[dataId].deviceId;
     }
 
     function getMyPublishedData() external view returns (uint256[] memory) {

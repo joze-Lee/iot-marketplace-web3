@@ -76,6 +76,37 @@ contract DeviceRegistry {
         emit DeviceMetadataUpdated(deviceId, newMetadataURI);
     }
 
+
+    /// @notice Get all device IDs owned by a specific user
+/// @param owner Address of the owner
+/// @return Array of device IDs owned by the address
+function getDevicesByOwner(address owner) external view returns (string[] memory) {
+    uint256 count = 0;
+    uint256 total = deviceIds.length;
+
+    // First count how many devices belong to owner
+    for (uint256 i = 0; i < total; i++) {
+        if (devices[deviceIds[i]].owner == owner) {
+            count++;
+        }
+    }
+
+    // Create array to hold owned devices
+    string[] memory ownedDeviceIds = new string[](count);
+    uint256 index = 0;
+
+    // Collect owned devices
+    for (uint256 i = 0; i < total; i++) {
+        if (devices[deviceIds[i]].owner == owner) {
+            ownedDeviceIds[index] = deviceIds[i];
+            index++;
+        }
+    }
+    return ownedDeviceIds;
+}
+
+
+
     /// @notice Retrieve device details by deviceId
     /// @param deviceId Unique identifier for the device
     /// @return name Device name

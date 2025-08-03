@@ -64,4 +64,7 @@
     transform: translateY(-2px);
     box-shadow: 0 4px 15px rgba(0, 255, 224, 0.3);
   }
+  .info-text {
+  cursor: default; /* keeps cursor normal on info messages */
+}
   

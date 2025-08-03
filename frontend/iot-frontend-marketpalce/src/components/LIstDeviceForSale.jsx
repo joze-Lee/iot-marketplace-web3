@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import { toast } from "react-toastify";
-import { MARKETPLACE_ADDRESS, MARKETPLACE_ABI, DEVICE_REGISTRY_ADDRESS, DEVICE_REGISTRY_ABI } from "../constants";
+import {
+  MARKETPLACE_ADDRESS,
+  MARKETPLACE_ABI,
+  DEVICE_REGISTRY_ADDRESS,
+  DEVICE_REGISTRY_ABI
+} from "../constants";
 import "./ListDeviceForSale.css";
 
 export default function ListDeviceForSale({ provider, account }) {
@@ -15,20 +20,30 @@ export default function ListDeviceForSale({ provider, account }) {
   useEffect(() => {
     if (!provider || !account) return;
 
-    const contract = new ethers.Contract(DEVICE_REGISTRY_ADDRESS, DEVICE_REGISTRY_ABI, provider);
+    const contract = new ethers.Contract(
+      DEVICE_REGISTRY_ADDRESS,
+      DEVICE_REGISTRY_ABI,
+      provider
+    );
 
     async function fetchUserDevices() {
       try {
-        const filter = contract.filters.DeviceRegistered(null, account);
-        const events = await contract.queryFilter(filter, 0, "latest");
+        // Call the new contract function that returns device IDs owned by account
+        const deviceIds = await contract.getDevicesByOwner(account);
 
-        const userDevices = events.map(event => {
-          const [deviceId, name] = event.args;
-          return { deviceId: deviceId.toString(), name };
-        });
+        // For each deviceId, get device info (name)
+        const userDevices = await Promise.all(
+          deviceIds.map(async (deviceId) => {
+            const [name] = await contract.getDevice(deviceId);
+            return { deviceId, name };
+          })
+        );
 
         setDevices(userDevices);
-        if (userDevices.length > 0) setSelectedDeviceId(userDevices[0].deviceId);
+
+        if (userDevices.length > 0) {
+          setSelectedDeviceId(userDevices[0].deviceId);
+        }
       } catch (err) {
         console.error("Failed to fetch devices:", err);
         setError("Could not load your devices");
@@ -45,13 +60,22 @@ export default function ListDeviceForSale({ provider, account }) {
       return;
     }
 
+    const priceNumber = Number(priceEth);
+    if (isNaN(priceNumber) || priceNumber <= 0) {
+      toast.error("Invalid price entered");
+      return;
+    }
+
     try {
       setLoading(true);
       const signer = await provider.getSigner();
-      const contract = new ethers.Contract(MARKETPLACE_ADDRESS, MARKETPLACE_ABI, signer);
-      const priceWei = ethers.utils.parseEther(priceEth);
-
-      const tx = await contract.listItem(selectedDeviceId, priceWei, metadataURI);
+      const contract = new ethers.Contract(
+        MARKETPLACE_ADDRESS,
+        MARKETPLACE_ABI,
+        signer
+      );
+      const priceWei = ethers.parseEther(priceEth); // ethers v6
+      const tx = await contract.listData(selectedDeviceId, priceWei);
       await tx.wait();
 
       toast.success("Device listed on marketplace!");
@@ -89,13 +113,11 @@ export default function ListDeviceForSale({ provider, account }) {
       <label className="input-label">
         Price (ETH):
         <input
-          type="number"
+          type="text"
           value={priceEth}
           onChange={(e) => setPriceEth(e.target.value)}
           disabled={loading}
           placeholder="e.g., 0.01"
-          min="0"
-          step="0.0001"
           className="text-input"
         />
       </label>

@@ -21,26 +21,51 @@ function App() {
   const [devices, setDevices] = useState([]);
 
   useEffect(() => {
-    if (account && window.ethereum) {
-      window.ethereum.request({ method: 'eth_accounts' }).then(accounts => {
-        if (accounts.length > 0 && accounts[0] !== account) {
-          setAccount(accounts[0]);
-        }
-      });
+    if (window.ethereum) {
       const ethProvider = new ethers.BrowserProvider(window.ethereum);
       setProvider(ethProvider);
+
+      window.ethereum
+        .request({ method: "eth_accounts" })
+        .then((accounts) => {
+          if (accounts.length > 0) {
+            setAccount(accounts[0]);
+          }
+        })
+        .catch((err) => {
+          console.error("Error fetching accounts:", err);
+        });
+
+      const handleAccountsChanged = (accounts) => {
+        if (accounts.length > 0) {
+          setAccount(accounts[0]);
+        } else {
+          setAccount(null);
+        }
+      };
+
+      window.ethereum.on("accountsChanged", handleAccountsChanged);
+
+      return () => {
+        window.ethereum.removeListener("accountsChanged", handleAccountsChanged);
+      };
     } else {
       setProvider(null);
     }
-  }, [account]);
+  }, []);
 
   function handleWalletConnected(accountAddress) {
     setAccount(accountAddress);
   }
 
   function handleDeviceRegistered() {
-    setRefreshFlag(prev => !prev);
+    setRefreshFlag((prev) => !prev);
   }
+
+  useEffect(() => {
+    // Debug: log devices whenever updated
+    console.log("Devices updated in App:", devices);
+  }, [devices]);
 
   return (
     <div className="app-container">
@@ -63,26 +88,15 @@ function App() {
             </div>
 
             <div className="card glass-card">
-              <RegisterDevice
-                provider={provider}
-                onRegistered={handleDeviceRegistered}
-              />
+              <RegisterDevice provider={provider} onRegistered={handleDeviceRegistered} />
             </div>
 
             <div className="card glass-card">
-              <DataPublisher
-                provider={provider}
-                account={account}
-                devices={devices}
-              />
+              <DataPublisher provider={provider} account={account} devices={devices} />
             </div>
 
             <div className="card glass-card">
-              <ListDeviceForSale
-                provider={provider}
-                account={account}
-                devices={devices}
-              />
+              <ListDeviceForSale provider={provider} account={account} devices={devices} />
             </div>
 
             <div className="card glass-card">
