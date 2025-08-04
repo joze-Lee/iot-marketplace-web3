@@ -1,10 +1,10 @@
-import DeviceRegistryArtifact from '../../../artifacts/contracts/DeviceRegistry.sol/DeviceRegistry.json';
-import DataPublisherArtifact from '../../../artifacts/contracts/DataPublisher.sol/DataPublisher.json';
-import MarketplaceArtifact from '../../../artifacts/contracts/Marketplace.sol/Marketplace.json';
+// import DeviceRegistryArtifact from '../../../artifacts/contracts/DeviceRegistry.sol/DeviceRegistry.json';
+// import DataPublisherArtifact from '../../../artifacts/contracts/DataPublisher.sol/DataPublisher.json';
+// import MarketplaceArtifact from '../../../artifacts/contracts/Marketplace.sol/Marketplace.json';
 
-// import DeviceRegistryArtifact from './abis/DeviceRegistry.json';
-// import DataPublisherArtifact from './abis/DataPublisher.json';
-// import MarketplaceArtifact from './abis/Marketplace.json';
+import DeviceRegistryArtifact from './abis/DeviceRegistry.json';
+import DataPublisherArtifact from './abis/DataPublisher.json';
+import MarketplaceArtifact from './abis/Marketplace.json';
 
 export const DEVICE_REGISTRY_ADDRESS = "0x26F08771d413C68bbdefb733dd8fC25d07Dad1d2";
 export const DEVICE_REGISTRY_ABI = DeviceRegistryArtifact.abi;
